@@ -1,0 +1,102 @@
+diff -urN vreen-20131016/src/api/audio.cpp vreen-20131016-patched/src/api/audio.cpp
+--- vreen-20131016/src/api/audio.cpp	2013-10-09 17:49:06.000000000 +1100
++++ vreen-20131016-patched/src/api/audio.cpp	1985-08-13 23:00:00.000000000 +1100
+@@ -24,6 +24,7 @@
+ ****************************************************************************/
+ #include "audio.h"
+ #include "client.h"
++#include "reply_p.h"
+ #include "utils_p.h"
+ #include <QUrl>
+ #include <QCoreApplication>
+@@ -120,6 +121,74 @@
+     return reply;
+ }
+ 
++AudioItemListReply *AudioProvider::getRecommendationsForUser(int uid, int count, int offset)
++{
++    Q_D(AudioProvider);
++    QVariantMap args;
++    if (uid < 0) {
++        qDebug("Vreen::AudioProvider::getRecomendationForUser may not work with groups (uid < 0)");
++
++    }
++    args.insert("uid",uid);
++    args.insert("count", count);
++    args.insert("offset", offset);
++
++    auto reply = d->client->request<AudioItemListReply>("audio.getRecommendations", args, AudioProviderPrivate::handleAudio);
++    return reply;
++}
++
++IntReply *AudioProvider::getCount(int oid)
++{
++    Q_D(AudioProvider);
++
++    oid = oid?oid:d->client->id();
++
++    QVariantMap args;
++    args.insert("oid", oid);
++
++    auto reply = d->client->request<IntReply>("audio.getCount", args, ReplyPrivate::handleInt);
++    return reply;
++}
++
++IntReply *AudioProvider::addToLibrary(int aid, int oid, int gid)
++{
++    Q_D(AudioProvider);
++
++    QVariantMap args;
++    args.insert("aid", aid);
++    args.insert("oid", oid);
++
++    if (gid) {
++        args.insert("gid",gid);
++    }
++
++    auto reply = d->client->request<IntReply>("audio.add", args, ReplyPrivate::handleInt);
++    return reply;
++}
++
++IntReply *AudioProvider::removeFromLibrary(int aid, int oid)
++{
++    Q_D(AudioProvider);
++
++    QVariantMap args;
++    args.insert("aid", aid);
++    args.insert("oid", oid);
++
++    auto reply = d->client->request<IntReply>("audio.delete", args, ReplyPrivate::handleInt);
++    return reply;
++}
++
++AudioItemListReply *AudioProvider::getAudiosByIds(const QString &ids)
++{
++    Q_D(AudioProvider);
++
++    QVariantMap args;
++    args.insert("audios", ids);
++
++    auto reply = d->client->request<AudioItemListReply>("audio.getById", args, AudioProviderPrivate::handleAudio);
++    return reply;
++}
++
+ class AudioModel;
+ class AudioModelPrivate
+ {
+diff -urN vreen-20131016/src/api/audio.h vreen-20131016-patched/src/api/audio.h
+--- vreen-20131016/src/api/audio.h	2013-10-09 17:49:06.000000000 +1100
++++ vreen-20131016-patched/src/api/audio.h	1985-08-13 23:00:00.000000000 +1100
+@@ -52,7 +52,12 @@
+     AudioProvider(Client *client);
+     virtual ~AudioProvider();
+     AudioItemListReply *getContactAudio(int uid = 0, int count = 50, int offset = 0);
++    AudioItemListReply *getAudiosByIds(const QString& ids);
++    AudioItemListReply *getRecommendationsForUser(int uid = 0, int count = 50, int offset = 0);
+     AudioItemListReply *searchAudio(const QString& query, int count = 50, int offset = 0, bool autoComplete = true, Vreen::AudioProvider::SortOrder sort = SortByPopularity, bool withLyrics = false);
++    IntReply *getCount(int oid = 0);
++    IntReply *addToLibrary(int aid, int oid, int gid = 0);
++    IntReply *removeFromLibrary(int aid, int oid);
+ protected:
+     QScopedPointer<AudioProviderPrivate> d_ptr;
+ };

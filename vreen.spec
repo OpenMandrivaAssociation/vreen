@@ -8,12 +8,14 @@ Summary:	Qt wrapper library for vk.com API
 Name:		vreen
 # From CMakeLists.txt
 Version:	0.9.5
-Release:	0.%{git}.1
+Release:	0.%{git}.2
 License:	LGPLv3+
 Group:		System/Libraries
 Url:		http://github.com/gorthauer/vreen
 # From git
 Source0:	vreen-%{git}.tar.bz2
+# Unless this pull request is merged: https://github.com/gorthauer/vreen/pull/19
+Patch0:		vreen-20131016-audio-api.patch
 BuildRequires:	cmake
 BuildRequires:	qt4-devel
 BuildRequires:	pkgconfig(QtWebKit)
@@ -55,6 +57,7 @@ Development files for vreen library.
 
 %prep
 %setup -q -n %{name}-%{git}
+%patch0 -p1
 
 %build
 %cmake_qt4 \
