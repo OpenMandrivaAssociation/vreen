@@ -1,4 +1,4 @@
-%define git 20131016
+%define git 20131027
 
 %define major 0
 %define libname %mklibname %{name} %{major}
@@ -14,8 +14,7 @@ Group:		System/Libraries
 Url:		http://github.com/gorthauer/vreen
 # From git
 Source0:	vreen-%{git}.tar.bz2
-# Unless this pull request is merged: https://github.com/gorthauer/vreen/pull/19
-Patch0:		vreen-20131016-audio-api.patch
+Patch0:		vreen-audio-api.patch
 BuildRequires:	cmake
 BuildRequires:	qt4-devel
 BuildRequires:	pkgconfig(QtWebKit)

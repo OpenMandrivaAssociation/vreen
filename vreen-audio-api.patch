@@ -1,0 +1,31 @@
+diff -urN vreen-20131027/src/api/audio.cpp vreen-20131027-patched/src/api/audio.cpp
+--- vreen-20131027/src/api/audio.cpp	2013-10-28 09:48:24.000000000 +1100
++++ vreen-20131027-patched/src/api/audio.cpp	2013-10-28 19:31:08.687311919 +1100
+@@ -101,12 +101,14 @@
+  * \param offset
+  * \return reply
+  */
+-AudioItemListReply *AudioProvider::getContactAudio(int uid, int count, int offset)
++AudioItemListReply *AudioProvider::getContactAudio(int uid, int count, int offset, int album_id)
+ {
+     Q_D(AudioProvider);
+     QVariantMap args;
+     if (uid)
+         args.insert(uid > 0 ? "uid" : "gid", qAbs(uid));
++    if (album_id > 0)
++        args.insert("album_id", album_id);
+     args.insert("count", count);
+     args.insert("offset", offset);
+ 
+diff -urN vreen-20131027/src/api/audio.h vreen-20131027-patched/src/api/audio.h
+--- vreen-20131027/src/api/audio.h	2013-10-28 09:48:24.000000000 +1100
++++ vreen-20131027-patched/src/api/audio.h	2013-10-28 19:31:23.506538871 +1100
+@@ -52,7 +52,7 @@
+     
+     AudioProvider(Client *client);
+     virtual ~AudioProvider();
+-    AudioItemListReply *getContactAudio(int uid = 0, int count = 50, int offset = 0);
++    AudioItemListReply *getContactAudio(int uid = 0, int count = 50, int offset = 0, int album_id = -1);
+     AudioItemListReply *getAudiosByIds(const QString& ids);
+     AudioItemListReply *getRecommendationsForUser(int uid = 0, int count = 50, int offset = 0);
+     AudioItemListReply *searchAudio(const QString& query, int count = 50, int offset = 0, bool autoComplete = true, Vreen::AudioProvider::SortOrder sort = SortByPopularity, bool withLyrics = false);
