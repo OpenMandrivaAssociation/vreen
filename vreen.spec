@@ -8,7 +8,7 @@ Summary:	Qt wrapper library for vk.com API
 Name:		vreen
 # From CMakeLists.txt
 Version:	0.9.5
-Release:	0.%{git}.2
+Release:	0.%{git}.3
 License:	LGPLv3+
 Group:		System/Libraries
 Url:		http://github.com/gorthauer/vreen
