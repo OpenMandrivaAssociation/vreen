@@ -11,7 +11,7 @@ Version:	0.9.5
 Release:	0.%{git}.4
 License:	LGPLv3+
 Group:		System/Libraries
-Url:		http://github.com/gorthauer/vreen
+Url:		https://github.com/gorthauer/vreen
 # From git
 Source0:	vreen-%{git}.tar.bz2
 Patch0:		vreen-audio-api.patch
